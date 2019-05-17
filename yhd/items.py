@@ -9,6 +9,15 @@ import scrapy
 
 
 class YhdItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    # 名称
+    name = scrapy.Field()
+    # 价格
+    price = scrapy.Field()
+    # 好评率
+    praise = scrapy.Field()
+    # 店铺名
+    store_name = scrapy.Field()
+    # 默认的图片键
+    image_urls = scrapy.Field()
+    # 默认的图片结果键
+    images = scrapy.Field()

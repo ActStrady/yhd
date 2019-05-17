@@ -4,8 +4,11 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import time
 
 from scrapy import signals
+from scrapy.http import HtmlResponse
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
 class YhdSpiderMiddleware(object):
@@ -60,7 +63,6 @@ class YhdDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
-
     @classmethod
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
@@ -69,15 +71,22 @@ class YhdDownloaderMiddleware(object):
         return s
 
     def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
-
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
+        if spider.name == "iphone":
+            # selenium 请求首页
+            spider.driver.get(request.url)
+            try:
+                # 使用js的scrollTo方法实现将页面向下滚动到底部
+                spider.driver.execute_script('window.scrollTo(0, document.body.scrollHeight)')
+                time.sleep(20)
+                # 获取加载完成的页面源代码
+                origin_code = spider.driver.page_source
+                # 将源代码构造成为一个Response对象，并返回。
+                res = HtmlResponse(url=request.url, encoding='utf8', body=origin_code, request=request)
+                return res
+            except TimeoutException:  # 超时
+                print("time out")
+            except NoSuchElementException:  # 无此元素
+                print("no such element")
         return None
 
     def process_response(self, request, response, spider):
