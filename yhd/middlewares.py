@@ -71,11 +71,13 @@ class YhdDownloaderMiddleware(object):
         return s
 
     def process_request(self, request, spider):
-        if spider.name == "iphone":
+        # 请求不是图片下载请求则处理请求
+        if '.jpg' not in request.url:
             # selenium 请求首页
             spider.driver.get(request.url)
             try:
                 # 使用js的scrollTo方法实现将页面向下滚动到底部
+                time.sleep(5)
                 spider.driver.execute_script('window.scrollTo(0, document.body.scrollHeight)')
                 time.sleep(20)
                 # 获取加载完成的页面源代码
