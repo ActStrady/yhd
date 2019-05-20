@@ -91,7 +91,7 @@ ITEM_PIPELINES = {
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # 图片文件保存目录
-IMAGES_STORE = './images/iphone'
+IMAGES_STORE = './images'
 
 # 过滤太小的图片
 IMAGES_MIN_HEIGHT = 60

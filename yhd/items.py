@@ -19,6 +19,9 @@ class YhdItem(scrapy.Item):
     store_name = scrapy.Field()
     # 图片地址
     image_url = scrapy.Field()
+
+
+class YhdImageItem(scrapy.Item):
     # 默认的图片键
     image_urls = scrapy.Field()
     # 默认的图片结果键

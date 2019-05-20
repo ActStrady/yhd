@@ -10,11 +10,14 @@ from scrapy.pipelines.images import ImagesPipeline
 
 
 class YhdPipeline(object):
-    def open_spider(self, spider):
+    def __init__(self):
         # 获取mysql连接
         self.db_conn = mysql_util.get_mysql_connect()
         # 获取mysql游标
         self.db_cursor = self.db_conn.cursor()
+
+    def open_spider(self, spider):
+        # 删除数据库
         self.db_cursor.execute('truncate yhd.iphone')
 
     def process_item(self, item, spider):
@@ -28,7 +31,9 @@ class YhdPipeline(object):
 
     # 爬虫全部完成后执行一次（收尾工作）
     def close_spider(self, spider):
+        # 提交
         self.db_conn.commit()
+        # 关闭
         self.db_cursor.close()
         self.db_conn.close()
 
@@ -36,11 +41,11 @@ class YhdPipeline(object):
 class YhdPipelineImage(ImagesPipeline):
     # 生成下载图片的request
     def get_media_requests(self, item, info):
-        return [Request('http:' + x) for x in item.get(self.images_urls_field, [])]
+        return [Request(x) for x in item.get(self.images_urls_field, [])]
 
-    # 指定文件名和存的父目录
+    # 指定文件名
     def file_path(self, request, response=None, info=None):
         # 图片名
         image_name = request.url.split("/")[-1]
         # 组目录
-        return '/%s' % image_name
+        return '/iphone/%s' % image_name
