@@ -17,6 +17,8 @@ class YhdItem(scrapy.Item):
     praise = scrapy.Field()
     # 店铺名
     store_name = scrapy.Field()
+    # 图片地址
+    image_url = scrapy.Field()
     # 默认的图片键
     image_urls = scrapy.Field()
     # 默认的图片结果键

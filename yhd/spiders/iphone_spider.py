@@ -60,5 +60,15 @@ class IphoneSpider(Spider):
             image_url = iphone.xpath(".//div[@class='proImg']/a/img/@src").extract_first()
             if image_url:
                 image_url = 'http:' + image_url
-            print(image_url)
+            item['image_url'] = image_url
             yield item
+        image_urls = iphone_list.xpath(".//div[@class='proImg']/a/img/@src").extract()
+        item['image_urls'] = image_urls
+        yield item
+        # 处理下一页
+        next_url = response.xpath("//a[@class='page_next']/@href").extract()
+        if next_url:
+            # 当前url加上参数url
+            next_url = response.urljoin(next_url[0])
+            # 关掉过滤
+            yield Request(next_url, dont_filter=True)
